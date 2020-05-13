@@ -5,9 +5,23 @@ import java.io.InputStreamReader
 import java.util.*
 
 fun getMajorityElement(a: IntArray, left: Int, right: Int): Int {
-    if (left == right) return -1
-    if (left + 1 == right) return a[left]
-    //write your code here
+    val n = right - left + 1
+    if (left == right) return a[left]
+    if (left + 1 == right && a[left] == a[right]) return a[left]
+    val part1 = getMajorityElement(a, left, (right + left) / 2)
+    val part2 = getMajorityElement(a, (right + left) / 2 + 1, right)
+    var count1 = 0
+    var count2 = 0
+    for (i in left..right) {
+        if (part1 == a[i]) count1++
+        if (part2 == a[i]) count2++
+    }
+    if (count1 > n / 2) {
+        return part1
+    }
+    if (count2 > n / 2) {
+        return part2
+    }
     return -1
 }
 
@@ -31,16 +45,42 @@ fun main(args: Array<String>) {
     for (i in 0 until n) {
         a[i] = scanner.nextInt()
     }
-    /* if (getMajorityElement(a, 0, a.size) != -1) {
-        println(1)
-    } else {
-        println(0)
-    } */
-    if (getMajorityElementNaive(a) != -1) {
+    if (getMajorityElement(a, 0, a.size - 1) != -1) {
         println(1)
     } else {
         println(0)
     }
+
+    /* STRESS TEST */
+    /* val rand = Random()
+    while (true) {
+        val n = rand.nextInt(10) + 5
+        println("N = $n")
+        val a = IntArray(n)
+        for (i in 0 until n) {
+            a[i] = rand.nextInt(4)
+            print("${a[i]} ")
+        }
+        println()
+        val res: Int
+        val resNaive: Int
+        if (getMajorityElement(a, 0, a.size - 1) != -1) {
+            res = 1
+        } else {
+            res = 0
+        }
+        if (getMajorityElementNaive(a) != -1) {
+            resNaive = 1
+        } else {
+            resNaive = 0
+        }
+        println("$res :: $resNaive")
+        if (res != resNaive) {
+            println("result = ${getMajorityElement(a, 0, a.size - 1)}")
+            println("ERROR")
+            break
+        }
+    } */
 }
 
 class FastScanner(stream: InputStream) {
